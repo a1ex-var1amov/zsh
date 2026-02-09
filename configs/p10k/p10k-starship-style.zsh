@@ -12,7 +12,16 @@
 # then overrides everything that differs from Starship.
 
 # --- Load lean base (git formatter, completion, defaults) ---
-P10K_LEAN="${POWERLEVEL9K_INSTALLATION_DIR:-$HOME/.zsh/themes/powerlevel10k}/config/p10k-lean.zsh"
+# Find p10k install dir: POWERLEVEL9K_INSTALLATION_DIR > Homebrew > ~/.zsh/themes
+if [[ -n "$POWERLEVEL9K_INSTALLATION_DIR" ]]; then
+  P10K_LEAN="$POWERLEVEL9K_INSTALLATION_DIR/config/p10k-lean.zsh"
+elif [[ -r /opt/homebrew/share/powerlevel10k/config/p10k-lean.zsh ]]; then
+  P10K_LEAN="/opt/homebrew/share/powerlevel10k/config/p10k-lean.zsh"
+elif [[ -r /usr/local/share/powerlevel10k/config/p10k-lean.zsh ]]; then
+  P10K_LEAN="/usr/local/share/powerlevel10k/config/p10k-lean.zsh"
+else
+  P10K_LEAN="$HOME/.zsh/themes/powerlevel10k/config/p10k-lean.zsh"
+fi
 [[ -r "$P10K_LEAN" ]] && source "$P10K_LEAN"
 
 # ============================================================================

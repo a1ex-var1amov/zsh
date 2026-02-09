@@ -229,8 +229,17 @@ print_success "Zsh config installed"
 
 # Prompt: Starship or Powerlevel10k
 if [[ "$PROMPT_ENGINE" == "p10k" ]]; then
-    # Install Powerlevel10k theme if not present
-    if [[ ! -d "$HOME/.zsh/themes/powerlevel10k" ]]; then
+    # Install Powerlevel10k via Homebrew (preferred) or git clone as fallback
+    if [[ "$(uname)" == "Darwin" ]] && command_exists brew; then
+        if ! brew list powerlevel10k &>/dev/null; then
+            print_status "Installing Powerlevel10k via Homebrew..."
+            brew install powerlevel10k && \
+                print_success "Powerlevel10k installed via Homebrew" || \
+                print_warning "Homebrew install failed"
+        else
+            print_success "Powerlevel10k already installed via Homebrew"
+        fi
+    elif [[ ! -d "$HOME/.zsh/themes/powerlevel10k" ]]; then
         print_status "Cloning Powerlevel10k..."
         git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$HOME/.zsh/themes/powerlevel10k" 2>/dev/null && \
             print_success "Powerlevel10k cloned" || \

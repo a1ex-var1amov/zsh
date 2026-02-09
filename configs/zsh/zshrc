@@ -403,13 +403,23 @@ if [[ -f ~/.config/terminal-fix-prompt ]]; then
   source ~/.config/terminal-fix-prompt 2>/dev/null
 fi
 if [[ "$PROMPT_ENGINE" == "p10k" ]]; then
-  if [[ -r "${HOME}/.zsh/themes/powerlevel10k/powerlevel10k.zsh-theme" ]]; then
-    source "${HOME}/.zsh/themes/powerlevel10k/powerlevel10k.zsh-theme"
+  # Find powerlevel10k: Homebrew first, then ~/.zsh/themes fallback
+  _p10k_theme=""
+  if [[ -r /opt/homebrew/share/powerlevel10k/powerlevel10k.zsh-theme ]]; then
+    _p10k_theme="/opt/homebrew/share/powerlevel10k/powerlevel10k.zsh-theme"
+  elif [[ -r /usr/local/share/powerlevel10k/powerlevel10k.zsh-theme ]]; then
+    _p10k_theme="/usr/local/share/powerlevel10k/powerlevel10k.zsh-theme"
+  elif [[ -r "${HOME}/.zsh/themes/powerlevel10k/powerlevel10k.zsh-theme" ]]; then
+    _p10k_theme="${HOME}/.zsh/themes/powerlevel10k/powerlevel10k.zsh-theme"
+  fi
+  if [[ -n "$_p10k_theme" ]]; then
+    source "$_p10k_theme"
     [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
   else
     # Fallback to Starship if p10k not installed
     (( $+commands[starship] )) && eval "$(starship init zsh)"
   fi
+  unset _p10k_theme
 else
   (( $+commands[starship] )) && eval "$(starship init zsh)"
 fi
