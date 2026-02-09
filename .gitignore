@@ -1,0 +1,9 @@
+# OS files
+.DS_Store
+*.swp
+*.swo
+*~
+
+# Backup files
+*.bak
+*.bak.*
